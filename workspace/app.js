@@ -1,57 +1,45 @@
 //importação das bibliotecas necessárias e a utilizando para a aplicação de teste didático
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
 app.use(express.json());
+
+//configuração do cors
 const cors = require("cors");
 app.use(cors());
-const mongoose = require("mongoose");
+//configuração do body-parser
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+//configuração do handlebars
+const handlebars = require("express-handlebars");
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
 
 
 //configuração do mongoose
+
+/*
+const mongoose = require("mongoose");
+
 mongoose.Promise = global.Promise;
-const db = "mongodb://127.0.0.1:27017/aprendendo";
+const db = "mongodb://127.0.0.1:27017/blog";
 mongoose.connect(db)
-    .then(() => {
-        console.log("Conectado ao banco de dados");
-    })
-    .catch(err => {
-        console.log("Erro ao conectar ao banco de dados:", err);
-    });
-
-
-//definindo o model
-    const usuarioSchema = new mongoose.Schema({
-        nome: String,
-        idade: Number,
-        email: String
-    });
-
-//definindo a colleção
-const Usuario = mongoose.model("Usuario", usuarioSchema);
-    
-//adiciona um novo usuário
-
-const novoUsuario = new Usuario({
-    nome: "Jhon Doe",
-    idade: 30,
-    email: "jhon@example.com"
+.then(() => {
+    console.log("Conectado ao banco de dados");
+})
+.catch(err => {
+    console.log("Erro ao conectar ao banco de dados:", err);
 });
-
-novoUsuario.save().then(() => {
-    console.log("Usuário adicionado com sucesso");
-}).catch(err => {
-    console.log("Erro ao adicionar usuário:", err);
-});
-
-
-
-//configuração das rotas
-app.get("/", (req, res) => {    
-    res.send("Hello World!");
-});
+        
+*/
+       
+//importação das rotas
+const admin = require("./routes/admin");
+app.use("/admin", admin);
+       
 
 //execução do servidor
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(` Servidor rodando na porta ${port}`);
 });
