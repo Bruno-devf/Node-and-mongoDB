@@ -20,6 +20,32 @@ mongoose.connect(db)
     });
 
 
+//definindo o model
+    const usuarioSchema = new mongoose.Schema({
+        nome: String,
+        idade: Number,
+        email: String
+    });
+
+//definindo a colleção
+const Usuario = mongoose.model("Usuario", usuarioSchema);
+    
+//adiciona um novo usuário
+
+const novoUsuario = new Usuario({
+    nome: "Jhon Doe",
+    idade: 30,
+    email: "jhon@example.com"
+});
+
+novoUsuario.save().then(() => {
+    console.log("Usuário adicionado com sucesso");
+}).catch(err => {
+    console.log("Erro ao adicionar usuário:", err);
+});
+
+
+
 //configuração das rotas
 app.get("/", (req, res) => {    
     res.send("Hello World!");
