@@ -37,15 +37,24 @@ const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// configuração do handlebars
-const { engine } = require("express-handlebars"); // Corrigido para a nova sintaxe
+const { engine } = require("express-handlebars");
 
 // Registrando o helper de formatação de data diretamente na configuração do Handlebars
 app.engine("handlebars", engine({
     helpers: {
+        // Helper de formatação de data
         formatDate: (date) => {
             const moment = require('moment');
             return moment(date).format('DD/MM/YYYY HH:mm:ss');
+        },
+
+        // Helper ifEquals para comparação de valores
+        ifEquals: function (a, b, options) {
+            if (a == b) {
+                return options.fn(this);  // Executa o bloco {{#ifEquals}} se a comparação for verdadeira
+            } else {
+                return options.inverse(this);  // Executa o bloco {{else}} se a comparação for falsa
+            }
         }
     }
 }));
