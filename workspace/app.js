@@ -39,21 +39,17 @@ app.use(bodyParser.json());
 
 const { engine } = require("express-handlebars");
 
-// Registrando o helper de formatação de data diretamente na configuração do Handlebars
 app.engine("handlebars", engine({
     helpers: {
-        // Helper de formatação de data
         formatDate: (date) => {
             const moment = require('moment');
             return moment(date).format('DD/MM/YYYY HH:mm:ss');
         },
-
-        // Helper ifEquals para comparação de valores
         ifEquals: function (a, b, options) {
             if (a == b) {
-                return options.fn(this);  // Executa o bloco {{#ifEquals}} se a comparação for verdadeira
+                return options.fn(this);
             } else {
-                return options.inverse(this);  // Executa o bloco {{else}} se a comparação for falsa
+                return options.inverse(this);
             }
         }
     }
@@ -74,9 +70,45 @@ mongoose.connect(db)
         console.log("Erro ao conectar ao banco de dados:", err);
     });
 
-// importação das rotas
+// importação das rotas e configuração das rotas
 const admin = require("./routes/admin");
 app.use("/admin", admin);
+require("./models/Categoria");
+require("./models/Postagem");
+const Postagem = mongoose.model("postagens");
+const Categoria = mongoose.model("categorias");
+
+//rota raiz
+app.get("/", (req, res) => {
+    Postagem.find().lean().populate("categoria").sort({ date: "desc" }).then((postagens) => {
+        res.render("index", { postagens: postagens });
+    }).catch((error) => {
+        req.flash("error_msg", "Erro ao buscar postagens");
+        console.error(error);
+        res.status(500).send("Erro ao buscar postagens");
+        res.redirect("/404");
+    })
+});
+
+app.get("/postagem/:slug", (req, res) => {
+    Postagem.findOne({ slug: req.params.slug }).lean().then((postagem) => {
+        if (postagem) {
+            res.render("postagem/index", { postagem: postagem });
+        } else {
+            req.flash("error_msg", "Postagem não encontrada");
+            res.redirect("/");
+        }
+    }).catch((error) => {
+        req.flash("error_msg", "Erro ao buscar postagem");
+        console.error(error);
+        res.status(500).send("Erro ao buscar postagem");
+        res.redirect("/404");
+    })
+});
+
+app.get("/404", (req, res) => {
+    res.render("404");
+})
 
 // execução do servidor
 const port = process.env.PORT || 3000;
