@@ -5,6 +5,11 @@ const express = require("express");
 const app = express();
 app.use(express.json());
 
+// configuração do passport
+const passport = require("passport");
+require("./config/auth")(passport);
+
+
 // configuração da sessão
 const session = require("express-session");
 app.use(session({
@@ -12,6 +17,9 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // configuração do flash
 const flash = require("connect-flash");
@@ -21,6 +29,8 @@ app.use(flash());
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash("success_msg");
     res.locals.error_msg = req.flash("error_msg");
+    res.locals.error = req.flash("error");
+    res.locals.user = req.user || null;
     next();
 })
 
@@ -70,13 +80,19 @@ mongoose.connect(db)
         console.log("Erro ao conectar ao banco de dados:", err);
     });
 
+
+
 // importação das rotas e configuração das rotas
 const admin = require("./routes/admin");
+const usuario = require("./routes/usuario");
+app.use("/usuario", usuario);
 app.use("/admin", admin);
 require("./models/Categoria");
 require("./models/Postagem");
 const Postagem = mongoose.model("postagens");
 const Categoria = mongoose.model("categorias");
+
+
 
 //rota raiz
 app.get("/", (req, res) => {
