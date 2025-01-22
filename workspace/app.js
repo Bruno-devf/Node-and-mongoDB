@@ -89,7 +89,9 @@ app.get("/", (req, res) => {
         res.redirect("/404");
     })
 });
+//fim da rota raiz
 
+//rotas de postagens
 app.get("/postagem/:slug", (req, res) => {
     Postagem.findOne({ slug: req.params.slug }).lean().then((postagem) => {
         if (postagem) {
@@ -105,9 +107,48 @@ app.get("/postagem/:slug", (req, res) => {
         res.redirect("/404");
     })
 });
+//fim das rotas de postagens
+
+//rotas de categorias
+app.get("/categorias", (req, res) => {
+    Categoria.find().lean().then((categorias) => {
+        res.render("categorias/index", { categorias: categorias });
+    }).catch((error) => {
+        req.flash("error_msg", "Erro ao buscar categorias");
+        console.error(error);
+        res.status(500).send("Erro ao buscar categorias");
+        res.redirect("/404");
+    })
+});
+
+app.get("/categorias/:slug", (req, res) => {
+    Categoria.findOne({ slug: req.params.slug }).lean().then((categoria) => {
+        if (categoria) {
+           Postagem.find({ categoria: categoria._id }).lean().then((postagens) => {
+               res.render("categorias/postagens", { postagens: postagens, categoria: categoria });
+           }).catch((error) => {
+               req.flash("error_msg", "Erro ao buscar postagens");
+               console.error(error);
+               res.status(500).send("Erro ao buscar postagens");
+               res.redirect("/");
+           })
+        } else {
+            req.flash("error_msg", "Categoria nao encontrada");
+            res.redirect("/");
+        }
+    }).catch((error) => {
+        req.flash("error_msg", "Erro ao buscar categoria");
+        console.error(error);
+        res.status(500).send("Erro ao buscar categoria");
+        res.redirect("/404");
+    })
+});
+
+//fim das rotas de categorias
+
 
 app.get("/404", (req, res) => {
-    res.render("404");
+    res.send("ERRO:404");
 })
 
 // execução do servidor

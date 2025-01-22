@@ -1,0 +1,65 @@
+<h2>Postagens da Categoria {{categoria.nome}}:</h2>
+<div class="container mt-5">
+    <div class="row">
+        {{#each postagens}}
+        <div class="col-md-4">
+            <div class="card mb-3 post-card">
+                <div class="card-body position-relative">
+                    <h2 class="card-title">{{titulo}}</h2>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-subtitle mb-2 text-muted post-description">{{descricao}}</h5>
+                        <a href="/postagem/{{slug}}"><button class="btn btn-link btn-sm">Saiba mais</button></a>
+                    </div>
+                    <small>Data de criação: {{formatDate date}}</small>
+                </div>
+            </div>
+        </div>
+        {{else}}
+        <div class="col-12">
+            <h5>Nenhuma postagem encontrada</h5>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<style>
+    /* Adicionando hover no card */
+    .post-card:hover {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        /* Sombra no card */
+        transform: translateY(-5px);
+        /* Leve elevação ao passar o mouse */
+        transition: all 0.3s ease;
+        /* Transição suave */
+    }
+
+    /* Truncando a descrição com '...' caso passe o limite de linhas */
+    .post-description {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        /* Limita a descrição a 2 linhas */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        /* Adiciona '...' no final */
+        height: 3rem;
+        /* Limita a altura das 2 linhas */
+    }
+
+    /* Estilo do card */
+    .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    /* Estilo do botão 'Saiba mais' */
+    .btn-link {
+        text-decoration: none;
+        font-size: 0.875rem;
+        color: #007bff;
+    }
+
+    .btn-link:hover {
+        text-decoration: underline;
+    }
+</style>

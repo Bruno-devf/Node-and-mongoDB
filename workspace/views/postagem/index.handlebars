@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exibição de Postagens</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        /* Custom Styles */
+        .post-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+
+        .post-title {
+            color: #333;
+        }
+
+        .post-meta {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        .post-content {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #212529;
+        }
+
+        .post-code {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: "Courier New", monospace;
+            overflow-x: auto;
+        }
+
+        hr {
+            border-color: #e9ecef;
+        }
+
+        .post-description {
+            color: #495057;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="post-container">
+            <h1 class="display-5 fw-bold post-title">{{postagem.titulo}}</h1>
+            <hr>
+            <div class="post-meta">
+                <small>Data de criação: {{formatDate postagem.date}}</small> |
+                <small>Descrição: {{postagem.descricao}}</small>
+            </div>
+            <hr>
+
+            <div class="post-content">
+                <small><strong>Conteúdo:</strong></small>
+                <div class="post-description">
+                    {{postagem.conteudo}}
+                </div>
+
+                <!-- Se tiver código no conteúdo, formate como código -->
+                <div v-if="postagem.conteudo.includes('<code>')">
+                    <pre class="post-code">{{postagem.conteudo}}</pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optional, for interactive components) -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
+
+</html>
