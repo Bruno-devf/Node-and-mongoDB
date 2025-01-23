@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/">Blog de códigos</a>
+        <a class="navbar-brand" href="/">Blog de códigos</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -13,12 +13,30 @@
                 <li class="nav-item">
                     <a class="nav-link" href="/categorias">Categorias</a>
                 </li>
+
+                <!-- Verificar se o usuário é admin -->
+                {{#if eAdmin}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/categorias">Admin - Categorias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin/postagens">Admin - Postagens</a>
+                </li>
+                {{/if}}
+
+                <!-- Verificar se o usuário está logado -->
+                {{#if user}}
+                <li class="nav-item">
+                    <a class="nav-link" href="/usuario/logout">Sair</a>
+                </li>
+                {{else}}
                 <li class="nav-item">
                     <a class="nav-link" href="/usuario/login">Login</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/usuario/registro">Cadastro</a>
                 </li>
+                {{/if}}
             </ul>
         </div>
     </div>

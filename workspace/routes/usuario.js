@@ -5,6 +5,7 @@ require('../models/Usuario');
 const Usuario = mongoose.model('usuarios');
 const bcrypt = require('bcryptjs'); // Usado para criptografar a senha
 const passport = require('passport');
+const eAdmin = require('../helpers/eAdmin');
 require('../config/auth');
 
 // Função para validar email com regex
@@ -77,7 +78,7 @@ router.post('/registro', async (req, res) => {
         const novoUsuario = new Usuario({
             nome,
             email,
-            senha,
+            senha
         });
 
         // Criptografando a senha antes de salvar
@@ -108,6 +109,17 @@ router.post('/login', (req, res, next) => {
         failureRedirect: '/usuario/login',
         failureFlash: true
     })(req, res, next);
+});
+
+router.get('/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            // Se houver um erro, você pode tratar aqui, por exemplo:
+            return res.status(500).send('Erro ao deslogar');
+        }
+        req.flash('success_msg', 'Deslogado com sucesso');
+        res.redirect('/usuario/login');
+    });
 });
 
 module.exports = router;
